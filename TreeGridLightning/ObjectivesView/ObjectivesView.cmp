@@ -1,0 +1,136 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="LightningExtension">
+    <aura:attribute name="objectives" type="List"/>
+    <aura:attribute name="searchText" type="String"/>
+    <aura:attribute name="spinner" type="String" default="hide"/>
+    <aura:attribute name="parentObjectiveIds" type="List"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.searchText}" action="{!c.search}"/>
+    
+    <div class="slds-text-heading_medium slds-p-top_large">
+        <lightning:icon iconName="action:new_task" size="small"/>
+        SOON Strategic Objectives of Model N
+    </div>
+    
+    <div class="slds-form-element slds-p-bottom_medium slds-float_right">
+		<div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
+            <ui:inputText class="slds-input" placeholder="Quick Find/Search..." value="{!v.searchText}"/>
+            <aura:if isTrue="{!and(v.spinner == 'show')}">
+                <div class="slds-icon slds-input__icon slds-input__icon_right slds-icon-text-default">
+                    <div role="status" class="slds-spinner slds-spinner_brand slds-spinner_x-small slds-input__spinner">
+                        <span class="slds-assistive-text">Loading</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+            </aura:if>
+		</div>
+	</div>
+    
+    <table class="slds-table slds-table_bordered slds-tree slds-table_tree" role="treegrid" aria-readonly="true">
+		<thead>
+			<tr class="slds-text-title_caps">
+				<th scope="col" class="bold border w20">
+					<div class="slds-truncate" title="Name">Name</div>
+				</th>
+                <th scope="col" class="bold border">
+					<div class="slds-truncate" title="Type">Type</div>
+				</th>
+                <th scope="col" class="bold border w20">
+					<div class="slds-truncate" title="Metric">Metric</div>
+				</th>
+                <th scope="col" class="bold border">
+					<div class="slds-truncate" title="Owner">Owner</div>
+				</th>
+                <th scope="col" class="bold border">
+					<div class="slds-truncate" title="Priority">Priority</div>
+				</th>
+                <th scope="col" class="bold border">
+					<div class="slds-truncate" title="Due Date">Due Date</div>
+				</th>
+                <th scope="col" class="bold border">
+					<div class="slds-truncate" title="Status">Status</div>
+				</th>                
+                <th scope="col" class="bold border">
+					<div class="slds-truncate" title="Vertical">Vertical</div>
+				</th>
+                <th class="slds-cell-shrink bold border" scope="col">
+                	<button class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small" aria-haspopup="true" tabindex="-1" title="Show More">
+                  		<lightning:icon iconName="utility:down" size="xx-small"/>
+                  		<span class="slds-assistive-text">Show More</span>
+                	</button>
+              	</th>
+			</tr>
+		</thead>
+		<tbody>
+            <aura:if isTrue="{!v.objectives.length>0}">
+                <aura:iteration items="{!v.objectives}" var="objective" indexVar="rowIndex">
+                    <tr aria-level="1" aria-posinset="{!rowIndex+1}" aria-setsize="{!v.objectives.length}" class="slds-hint-parent" data-objectiveid="{!objective.Id}">
+                        <th class="slds-tree__item w20 mw20" data-label="Name">
+                            <!--<lightning:icon iconName="utility:threedots_vertical" size="small"/>-->
+                            <aura:if isTrue="{!objective.Objectives__r.length>0}">
+                                <aura:if isTrue="{!objective.expandFlag}">
+                                    <button class="slds-button slds-button_icon slds-button_icon-x-small slds-m-right_x-small" aria-hidden="true" tabindex="-1" title="{!'Collapse '+objective.Name}" onclick="{!c.collapseNode}">
+                                        <lightning:icon iconName="utility:chevrondown" size="xx-small"/>
+                                    </button>
+                                    <aura:set attribute="else">
+                                        <button class="slds-button slds-button_icon slds-button_icon-x-small slds-m-right_x-small" aria-hidden="true" tabindex="-1" title="{!'Expand '+objective.Name}" onclick="{!c.expandNode}">
+                                            <lightning:icon iconName="utility:chevronright" size="xx-small"/>
+                                        </button>
+                                    </aura:set>
+                                </aura:if>
+                            </aura:if>
+                            <button class="slds-button" onclick="{!c.viewObjective}">
+                                <div class="slds-truncate mw15 fs13 slds-text-align_left" title="{!objective.Name}">{!objective.Name}</div>
+                            </button>
+                        </th>
+                        <td data-label="Type" role="gridcell">
+                            <div class="slds-truncate" title="{!objective.Type__c}">{!objective.Type__c}</div>
+                        </td>
+                        <td data-label="Metric" role="gridcell" class="w20 mw20">
+                            <div class="slds-truncate mw20" title="{!objective.Objective_Metric__c}">{!objective.Objective_Metric__c}</div>
+                        </td>
+                        <td data-label="Owner" role="gridcell">
+                            <div class="slds-truncate" title="{!objective.Objective_Owner__c}">{!objective.Objective_Owner__c}</div>
+                        </td>
+                        <td data-label="Priority" role="gridcell">
+                            <div class="slds-truncate" title="{!objective.Objective_Priority__c}">{!objective.Objective_Priority__c}</div>
+                        </td>
+                        <td data-label="Due Date" role="gridcell">
+                            <div class="slds-truncate" title="{!objective.Due_Date__c}">{!objective.Due_Date__c}</div>
+                        </td>
+                        <td data-label="Status" role="gridcell">
+                            <div class="slds-truncate" title="{!objective.Objective_Status__c}">{!objective.Objective_Status__c}</div>
+                        </td>                    
+                        <td data-label="Vertical" role="gridcell">
+                            <div class="slds-truncate" title="{!objective.Vertical__c}">{!objective.Vertical__c}</div>
+                        </td>
+                        <td class="slds-cell-shrink" role="gridcell">
+                            <div class="slds-button-group" role="group">
+                                <div class="slds-dropdown-trigger slds-button--last">
+                                    <button class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small">
+                                        <lightning:icon iconName="utility:down" size="xx-small"/>
+                                        <span class="slds-assistive-text">More Actions</span>
+                                    </button>
+                                    <div class="slds-dropdown slds-dropdown--right slds-text-heading--label slds-dropdown--menu">
+                                        <ul class="slds-dropdown__list" role="menu">
+                                            <li href="#" class="slds-dropdown__item"><a href="javascript:void(0)" class="slds-truncate" role="menuitem" data-objectiveid="{!objective.Id}" onclick="{!c.editObjective}">Edit</a></li>
+                                            <li href="#" class="slds-dropdown__item"><a href="javascript:void(0)" class="slds-truncate" role="menuitem" data-objectiveid="{!objective.Id}" data-objectivename="{!objective.Name}" onclick="{!c.addObjective}">Add Objective</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <aura:if isTrue="{!and(objective.expandFlag,objective.Objectives__r.length>0)}">
+                        <c:ObjectiveViewTreeNode objectives="{!v.objectives}" objective="{!objective}" level="2" expandFlag="true" searchText="{!v.searchText}"/>
+                    </aura:if>
+                </aura:iteration>
+                <aura:set attribute="else">
+                    <tr>
+                        <td colspan="9" class="slds-text-align_center">No Objectives found</td>
+                    </tr>
+                </aura:set>
+            </aura:if>
+		</tbody>
+	</table>
+</aura:component>

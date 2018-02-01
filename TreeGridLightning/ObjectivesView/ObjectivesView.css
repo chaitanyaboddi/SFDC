@@ -1,0 +1,23 @@
+.THIS .bold{
+    font-weight: bold !important;
+}
+
+.THIS .border{
+    border-bottom: 2px solid rgb(162, 162, 162) !important;
+}
+
+.THIS .w20{
+    width: 20rem;
+}
+
+.THIS .mw20{
+    max-width: 20rem;
+}
+
+.THIS .mw15{
+    max-width: 15rem;
+}
+
+.THIS .fs13{
+	font-size: 13px;
+}

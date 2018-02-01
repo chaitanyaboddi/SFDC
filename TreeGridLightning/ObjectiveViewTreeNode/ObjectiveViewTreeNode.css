@@ -1,0 +1,30 @@
+.THIS .w20{
+    width: 20rem;
+}
+
+.THIS .mw15{
+    max-width: 15rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.THIS .mw20{
+    max-width: 20rem;
+}
+
+.THIS .fs13{
+	font-size: 13px;
+}
+
+.THIS .mt6{
+    margin-top:6px;
+}
+
+.THIS .w12{
+    width:12px;
+}
+
+.THIS .transparent{
+    fill-opacity: 0.5;
+}
